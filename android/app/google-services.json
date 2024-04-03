@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "373810517511",
+    "project_id": "tourmate-156e1",
+    "storage_bucket": "tourmate-156e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373810517511:android:e81cce95dcd55f27097ca2",
+        "android_client_info": {
+          "package_name": "com.tourism.tourmateadmin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2OvE26LgitVUSuDleEi2h80a0Tl2ASEA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
