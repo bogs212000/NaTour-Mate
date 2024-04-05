@@ -1,9 +1,16 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourmateadmin/account/loginscreen.dart';
 import 'package:tourmateadmin/account/profile.dart';
+import 'package:tourmateadmin/account/wrapper.dart';
+import 'package:tourmateadmin/const.dart';
+import 'package:tourmateadmin/fetch.data.dart';
+import 'package:tourmateadmin/main.dart';
 import 'package:tourmateadmin/pages/window.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../pages/adddestination.dart';
 
@@ -16,23 +23,60 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+           DrawerHeader(
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 30, 0, 253),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'NaTour Buddy',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      'Hello ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                   userName == '' ?
+                   Text(
+                      ' User!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ):
+                   Text(
+                      ' ${userName}!',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  'Narra Tourism Partner',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                Row(
+                  children: [
+                    Text(
+                      'NaTour Buddy',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Narra Tourism Partner',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -78,11 +122,10 @@ class NavDrawer extends StatelessWidget {
             title: const Text('Feedback'),
             onTap: () => {Navigator.of(context).pop()},
           ),
-          ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('LogIn/LogOut'),
+          userName == '' ? ListTile(
+            leading: const Icon(Icons.login),
+            title: const Text('Sign in'),
             onTap: () async => {
-              await FirebaseAuth.instance.signOut(),
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -90,10 +133,20 @@ class NavDrawer extends StatelessWidget {
                 ),
               ),
             },
+          ) : ListTile(
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Sign out'),
+            onTap: () async => {
+              await FirebaseAuth.instance.signOut(),
+              Navigator.pop(context),
+              MaterialPageRoute(
+                builder: (context) => const AuthWrapper(),
+              ),
+            },
           ),
-          ListTile(
-            leading: const Icon(Icons.input),
-            title: const Text('blabala'),
+         if (userRole == "admin") ListTile(
+            leading: const Icon(Icons.cloud_upload),
+            title: const Text('upload'),
             onTap: () => {
               Navigator.of(context).pop(),
               Navigator.push(
@@ -103,7 +156,7 @@ class NavDrawer extends StatelessWidget {
                 ),
               ),
             },
-          ),
+          ) else SizedBox(),
         ],
       ),
     );

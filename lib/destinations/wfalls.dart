@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tourmateadmin/const.dart';
 import 'package:tourmateadmin/pages/fees.dart';
 import 'package:tourmateadmin/pages/window.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class Wfalls extends StatefulWidget {
   const Wfalls({super.key});
@@ -131,7 +135,7 @@ class _WfallsState extends State<Wfalls> {
                 )
               ],
             ),
-          ),//end of top showcase
+          ), //end of top showcase
           const Divider(
             height: 15,
             color: Colors.black,
@@ -139,8 +143,11 @@ class _WfallsState extends State<Wfalls> {
           // list of destinations
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('wfalls').snapshots(),
+              stream: FirebaseFirestore.instance
+                  .collection('destinations')
+                  .doc(placeList)
+                  .collection('places')
+                  .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -148,70 +155,112 @@ class _WfallsState extends State<Wfalls> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: Container(height: 50, width: 50, child: const CircularProgressIndicator()));
+                  return Center(
+                      child: Container(
+                          height: 50,
+                          width: 50,
+                          child: const CircularProgressIndicator()));
                 }
 
                 return ListView(
                   children: snapshot.data!.docs.map(
                     (DocumentSnapshot document) {
-                      return Container(
-                        margin: const EdgeInsets.fromLTRB(3, 8, 2, 5),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        width: MediaQuery.of(context).size.width / 1,
+                      return GestureDetector(
+                        onTap: (){
 
-                        child: ListTile(
-                          title: Text(
-                            document['name'],
-                            style: const TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        },
+                        child: Container(
+                          height: 100,
+                          margin: const EdgeInsets.fromLTRB(3, 8, 2, 5),
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 1),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          subtitle: Text(
-                            document['location'],
-                          ),
-                          leading: Container(
-                            width: 100,
-                            alignment: Alignment.center,
-                            child: FutureBuilder(
-                              future: _getPictures(document['name']),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(child: Container(height: 50, width: 50, child: const CircularProgressIndicator()));
-                                } else if (snapshot.hasError) {
-                                  return Text("Error: ${snapshot.error}");
-                                } else {
-                                  List<String> pictureUrls =
-                                      snapshot.data as List<String>;
-
-                                  return SizedBox(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Image.network(
-                                        pictureUrls.isNotEmpty
-                                            ? pictureUrls[0]
-                                            : 'placeholder_url', // Provide a placeholder URL or handle empty list
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          trailing: const Text('details'),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => WinDow(document: document),
+                          width: MediaQuery.of(context).size.width / 1,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.network(
+                                  document['image'].toString(),
+                                  width: 150,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child; // Return the image once it's loaded
+                                    } else {
+                                      return Container(
+                                        height: double.infinity,
+                                        width: 150,
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value: loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
-                            );
-                          },
+                              Expanded(
+                                  child: Container(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                              child: "${document['name']}"
+                                                  .text
+                                                  .size(15)
+                                                  .bold
+                                                  .overflow(TextOverflow.fade)
+                                                  .make())
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.pin_drop,
+                                            size: 20,
+                                          ),
+                                          Flexible(
+                                              child: "${document['address']}"
+                                                  .text
+                                                  .color(Colors.grey)
+                                                  .size(10)
+                                                  .overflow(TextOverflow.fade)
+                                                  .make())
+                                        ],
+                                      ),
+                                      Spacer(),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          "Details"
+                                              .text
+                                              .size(11)
+                                              .color(Colors.grey)
+                                              .overflow(TextOverflow.fade)
+                                              .make()
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -20,7 +20,7 @@ class _RegisterState extends State<Register> {
 
   final _formkey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
-  final rool = 'user';
+  final role = 'user';
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmpassController = TextEditingController();
   final TextEditingController name = TextEditingController();
@@ -293,7 +293,7 @@ class _RegisterState extends State<Register> {
                                   showProgress = true;
                                 });
                                 signUp(emailController.text,
-                                    passwordController.text, rool);
+                                    passwordController.text, role);
                                 const CircularProgressIndicator();
                                 Navigator.push(
                                   context,
@@ -346,7 +346,7 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void signUp(String email, String password, String rool) async {
+  void signUp(String email, String password, String role) async {
     const CircularProgressIndicator();
     if (_formkey.currentState!.validate()) {
       await _auth.createUserWithEmailAndPassword(
@@ -355,7 +355,7 @@ class _RegisterState extends State<Register> {
           .collection("users")
           .doc(emailController.text.trim())
           .set({
-        'rool': "user",
+        'role': "user",
         'password': passwordController.text.trim(),
         'name': name.text.trim(),
         'address': address.text.trim(),
@@ -369,7 +369,7 @@ class _RegisterState extends State<Register> {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     var user = _auth.currentUser;
     CollectionReference ref = FirebaseFirestore.instance.collection('users');
-    ref.doc(user!.uid).set({'email': emailController.text, 'rool': rool});
+    ref.doc(user!.uid).set({'email': emailController.text, 'role': role});
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }

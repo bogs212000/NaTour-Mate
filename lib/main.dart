@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/pages/destination_page.dart';
 import 'package:tourmateadmin/pages/events_page.dart';
+import 'package:tourmateadmin/pages/show.place.data.dart';
 import 'package:tourmateadmin/widgets/drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tourmateadmin/widgets/qr_scan_page.dart';
@@ -22,11 +24,16 @@ class MainApp extends StatefulWidget {
 }
 
 class _MainAppState extends State<MainApp> {
+
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AuthWrapper(),
+      routes: {
+        '/showplacedata': (context) => ShowPlaceData(),
+      },
     );
   }
 }
@@ -46,6 +53,13 @@ class _RootpageState extends State<Rootpage> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchUserRole(setState);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       
@@ -59,13 +73,10 @@ class _RootpageState extends State<Rootpage> {
             Text(
               'NaTour BUDDY',
               style: TextStyle(
-                fontSize: 28,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
-            ),
-            SizedBox(
-              width: 50,
             ),
           ],
         ),

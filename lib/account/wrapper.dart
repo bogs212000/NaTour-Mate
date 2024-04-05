@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourmateadmin/pages/adminpage.dart';
+import 'package:tourmateadmin/pages/destination_page.dart';
 
 import '../main.dart';
 
@@ -44,10 +45,10 @@ class Wrapper extends StatelessWidget {
             builder: (
               context,
             ) {
-              if (userData.data!['rool'] == 'user') {
+              if (userData.data!['role'] == 'user') {
                 return Rootpage();
-              } else if (userData.data!['rool'] == 'admin') {
-                return AdminScreen();
+              } else if (userData.data!['role'] == 'admin') {
+                return Rootpage();
               } else {
                 return Rootpage();
               }

@@ -215,6 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Padding(
               padding: EdgeInsets.only(right: screenWidth / 12),
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: controller,
                 enableSuggestions: false,
                 autocorrect: false,

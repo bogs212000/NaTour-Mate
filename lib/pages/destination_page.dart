@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tourmateadmin/const.dart';
 import 'package:tourmateadmin/destinations/beach.dart';
 import 'package:tourmateadmin/destinations/cathedral.dart';
 import 'package:tourmateadmin/destinations/farms.dart';
@@ -12,19 +13,23 @@ import 'package:tourmateadmin/destinations/scomplex.dart';
 import 'package:tourmateadmin/destinations/transport.dart';
 import 'package:tourmateadmin/destinations/wfalls.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tourmateadmin/fetch.data.dart';
+import 'package:tourmateadmin/pages/show.places.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 String? role;
-String? name = 'user';
 String? email = FirebaseAuth.instance.currentUser!.email;
 
 class Adestination extends StatefulWidget {
   const Adestination({Key? key}) : super(key: key);
+
 
   @override
   State<Adestination> createState() => _AdestinationState();
 }
 
 class _AdestinationState extends State<Adestination> {
+
   Future<Widget> _getImage(BuildContext context, String imageName) async {
     late Image image;
     await FireStorageService.LoadImage(context, imageName).then((value) {
@@ -38,24 +43,25 @@ class _AdestinationState extends State<Adestination> {
 
   @override
   void initState() {
-    fecth();
+    // fecth();
+    fetchUserRole(setState);
   }
 
-  Future<void> fecth() async {
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.email.toString())
-        .get()
-        .then((ds) {
-      setState(() {
-        role = ds.data()!['rool'];
-        name = ds.data()!['name'];
-      });
-      print(role);
-    }).catchError((e) {
-      print(e);
-    });
-  }
+  // Future<void> fecth() async {
+  //   await FirebaseFirestore.instance
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser!.email.toString())
+  //       .get()
+  //       .then((ds) {
+  //     setState(() {
+  //       role = ds.data()!['role'];
+  //       name = ds.data()!['name'];
+  //     });
+  //     print(role);
+  //   }).catchError((e) {
+  //     print(e);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,10 +126,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'Wfalls';
+                                  imageList = 'falls';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Wfalls(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -145,10 +155,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'river';
+                                  imageList ='river';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Rivers(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -175,10 +189,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'farms';
+                                  imageList ='farms';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Farms(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -200,10 +218,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'cathedral';
+                                  imageList ='cathedral';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Cathedrals(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -225,10 +247,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'scomplex';
+                                  imageList ='scomplex';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Sportscomplex(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -256,10 +282,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'beach';
+                                  imageList ='beach';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Beach(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -281,10 +311,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'museum';
+                                  imageList ='museum';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Museum(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -306,11 +340,15 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'terminal';
+                                  imageList ='terminal';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const Transportation(),
+                                        const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -338,10 +376,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'mountain';
+                                  imageList ='mountain';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Mountains(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -363,10 +405,14 @@ class _AdestinationState extends State<Adestination> {
                             ),
                             child: InkWell(
                               onTap: () {
+                                setState(() {
+                                  placeList = 'hspring';
+                                  imageList ='hspring';
+                                });
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Hotspring(),
+                                    builder: (context) => const ShowPlaces(),
                                   ),
                                 );
                               },
@@ -383,8 +429,11 @@ class _AdestinationState extends State<Adestination> {
                 );
               },
             ),
-            Container(
-              child: Text('Welcome $name'),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Container(
+                child: 'Welcome $userName'.text.bold.size(20).make(),
+              ),
             ),
           ],
 
