@@ -2,16 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourmateadmin/const.dart';
-import 'package:tourmateadmin/destinations/beach.dart';
-import 'package:tourmateadmin/destinations/cathedral.dart';
-import 'package:tourmateadmin/destinations/farms.dart';
-import 'package:tourmateadmin/destinations/hspring.dart';
-import 'package:tourmateadmin/destinations/mountain.dart';
-import 'package:tourmateadmin/destinations/museum.dart';
-import 'package:tourmateadmin/destinations/river.dart';
-import 'package:tourmateadmin/destinations/scomplex.dart';
-import 'package:tourmateadmin/destinations/transport.dart';
-import 'package:tourmateadmin/destinations/wfalls.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/pages/show.places.dart';
@@ -22,7 +12,6 @@ String? email = FirebaseAuth.instance.currentUser!.email;
 
 class Adestination extends StatefulWidget {
   const Adestination({Key? key}) : super(key: key);
-
 
   @override
   State<Adestination> createState() => _AdestinationState();

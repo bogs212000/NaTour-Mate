@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tourmateadmin/pages/loading.show.place.data.dart';
 import 'package:uuid/uuid.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -40,6 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'terminal'
   ];
 
+  bool loading = false;
   Future<void> _openImagePicker() async {
     final XFile? pickedImage =
     await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
@@ -56,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? LoadingShowPlaceData() : Scaffold(
       appBar: AppBar(
         title: Text('Add Destination'),
       ),
@@ -148,6 +150,9 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  setState(() {
+                    loading = true;
+                  });
                   await createCollectionAndDocument();
                 },
                 child: const Text('Create Collection and Document'),
@@ -172,9 +177,11 @@ class _MyHomePageState extends State<MyHomePage> {
         .child('UsersId/$name');
     await ref.putFile(File(_image!.path));
     imageUrl = await ref.getDownloadURL();
-    String productId = Uuid().v4();
-    await firestore.collection('destinations').doc(selectedCollection.toString()).collection('places').doc(productId).set({
-      'id': productId,
+    String DocId = Uuid().v4();
+    await firestore.collection('destinations').doc(selectedCollection.toString()).collection('places').doc(DocId).set({
+      'id': DocId,
+      'status_notice': '',
+      'scanned': 0,
       'image': imageUrl,
       'name': nameController.text.toString(),
       'entrance fee' : entranceFee.text.toString(),
@@ -186,7 +193,22 @@ class _MyHomePageState extends State<MyHomePage> {
       'long': glong,
       // Add other fields as needed
     });
-
+    await firestore.collection('places').doc(DocId).set({
+      'id': DocId,
+      'scanned': 0,
+      'image': imageUrl,
+      'name': nameController.text.toString(),
+      'entrance fee' : entranceFee.text.toString(),
+      'cottage fee' : cottageFee.text.toString(),
+      'table fee' : tableFee.text.toString(),
+      'details' : descriptionController.text.toString(),
+      'address': addressController.text.toString(),
+      'lat': glat,
+      'long': glong,
+    });
+    setState(() {
+      loading = false;
+    });
     // Display success message
     showDialog(
       context: context,

@@ -94,7 +94,7 @@ class NavDrawer extends StatelessWidget {
               ),
             },
           ),
-          ListTile(
+          if (userRole == "admin" || userRole == "user") ListTile(
             leading: const Icon(Icons.verified_user),
             title: const Text('Profile'),
             onTap: () => {
@@ -106,7 +106,7 @@ class NavDrawer extends StatelessWidget {
                 ),
               ),
             },
-          ),
+          ) else SizedBox(),
           ListTile(
             leading: const Icon(Icons.map_outlined),
             title: const Text('MAP'),
@@ -140,7 +140,7 @@ class NavDrawer extends StatelessWidget {
               await FirebaseAuth.instance.signOut(),
               Navigator.pop(context),
               MaterialPageRoute(
-                builder: (context) => const AuthWrapper(),
+                builder: (context) => AuthWrapper(),
               ),
             },
           ),

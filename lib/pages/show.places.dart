@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tourmateadmin/const.dart';
@@ -66,20 +67,20 @@ class _ShowPlacesState extends State<ShowPlaces> {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FeesScreen(documentId: ''),
-                ),
-              );
-            },
-            icon: const Icon(Icons.qr_code_scanner_sharp),
-            iconSize: 40,
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => FeesScreen(documentId: ''),
+        //         ),
+        //       );
+        //     },
+        //     icon: const Icon(Icons.qr_code_scanner_sharp),
+        //     iconSize: 40,
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
@@ -90,7 +91,6 @@ class _ShowPlacesState extends State<ShowPlaces> {
               borderRadius: BorderRadius.circular(10),
             ),
             margin: const EdgeInsets.all(2),
-            height: 228,
             child: FutureBuilder<List<String>>(
               future: _imageUrls,
               builder: (context, snapshot) {
@@ -102,7 +102,7 @@ class _ShowPlacesState extends State<ShowPlaces> {
                 }
                 List<String>? imageUrls = snapshot.data;
                 if (imageUrls == null || imageUrls.isEmpty) {
-                  return Center(child: Text('No images found.'));
+                  return Center(child: Text(''));
                 }
                 return CarouselSlider.builder(
                   itemCount: imageUrls.length,
@@ -158,7 +158,6 @@ class _ShowPlacesState extends State<ShowPlaces> {
                 return ListView(
                   children: snapshot.data!.docs.map(
                     (DocumentSnapshot document) {
-
                       return GestureDetector(
                         onTap: () async {
                           setState(() {
@@ -167,7 +166,6 @@ class _ShowPlacesState extends State<ShowPlaces> {
                           print(placeDocID);
 
                           Navigator.pushNamed(context, '/showplacedata');
-
                         },
                         child: Padding(
                           padding: EdgeInsets.only(left: 5, right: 5),
@@ -181,36 +179,22 @@ class _ShowPlacesState extends State<ShowPlaces> {
                             width: MediaQuery.of(context).size.width / 1,
                             child: Row(
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.network(
-                                    document['image'].toString(),
-                                    width: 150,
-                                    fit: BoxFit.cover,
-                                    loadingBuilder: (BuildContext context,
-                                        Widget child,
-                                        ImageChunkEvent? loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        return child; // Return the image once it's loaded
-                                      } else {
-                                        return Container(
-                                          height: double.infinity,
-                                          width: 150,
-                                          child: Center(
-                                            child: CircularProgressIndicator(
-                                              value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                  : null,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(10.0), // Adjust the radius as needed
+                                        topLeft: Radius.circular(10.0), // Adjust the radius as needed
+                                      ),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            document['image'].toString()),
+                                        fit: BoxFit
+                                            .cover, // You can change the BoxFit as needed
+                                      ),
+                                    ),
+                                    // Other properties like width, height, padding, etc.
+                                    // child: Your child widgets if needed
                                   ),
                                 ),
                                 Expanded(
@@ -241,7 +225,8 @@ class _ShowPlacesState extends State<ShowPlaces> {
                                                     .text
                                                     .color(Colors.grey)
                                                     .size(10)
-                                                    .overflow(TextOverflow.ellipsis)
+                                                    .overflow(
+                                                        TextOverflow.ellipsis)
                                                     .make())
                                           ],
                                         ),

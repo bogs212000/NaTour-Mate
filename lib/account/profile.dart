@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tourmateadmin/const.dart';
 
 class UserProfile {
   String name;
@@ -24,48 +25,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late UserProfile user;
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the user with default values
-    user = UserProfile(
-      name: 'Default Name',
-      age: 0,
-      address: 'Default Address',
-      birthday: DateTime.now(),
-    );
-
-    // Fetch user data from Firebase
-    fetchUserData();
-  }
-
-  Future<void> fetchUserData() async {
-    try {
-      // Replace 'users' with your Firebase collection name
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-      await FirebaseFirestore.instance.collection('users').doc('user_id').get();
-
-      // Check if the document exists before accessing its data
-      if (snapshot.exists) {
-        // Map the data to the UserProfile class
-        user = UserProfile(
-          name: snapshot['name'] ?? 'Default Name',
-          age: snapshot['age'] ?? 0,
-          address: snapshot['address'] ?? 'Default Address',
-          birthday: (snapshot['birthday'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        );
-
-        // Update the UI after fetching data
-        setState(() {});
-      } else {
-        print('User document does not exist');
-      }
-    } catch (e) {
-      print('Error fetching user data: $e');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            buildProfileItem('Name', user.name),
-            buildProfileItem('Age', user.age.toString()),
-            buildProfileItem('Address', user.address),
-            buildProfileItem(
-              'Birthday',
-              DateFormat('MMMM dd, yyyy').format(user.birthday),
-            ),
+            buildProfileItem('Name', userName),
+            buildProfileItem('Email', currentUser!),
+            buildProfileItem('Address', userAddress),
           ],
         ),
       ),

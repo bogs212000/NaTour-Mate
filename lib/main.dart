@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tourmateadmin/account/loginscreen.dart';
 import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/pages/destination_page.dart';
 import 'package:tourmateadmin/pages/events_page.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:tourmateadmin/widgets/qr_scan_page.dart';
 
 import 'account/wrapper.dart';
+import 'const.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,10 +68,10 @@ class _RootpageState extends State<Rootpage> {
       drawer: const NavDrawer(
       ),
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: const Color.fromARGB(255, 0, 173, 14),
         title: const Row(
           children: [
-            
             Text(
               'NaTour BUDDY',
               style: TextStyle(
@@ -83,15 +85,48 @@ class _RootpageState extends State<Rootpage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Qrscaan(),
-                ),
-              );
+              if (userRole == "admin" || userRole == "user") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Qrscaan(),
+                  ),
+                );
+
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Hello User'),
+                      content: Text("Please sign in to scan the QR code. If you don't have an account, you can sign up first."),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: Text('Continue'),
+                        ),
+
+                      ],
+                    );
+                  },
+                );
+              }
             },
             icon: const Icon(Icons.qr_code_scanner_sharp),
-            iconSize: 40,
+            iconSize: 30,
           ),
         ],
       ),

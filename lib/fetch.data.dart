@@ -10,6 +10,7 @@ Future<void> fetchUserRole(Function setState) async {
     setState((){
     userRole = snapshot.data()?['role'];
     userName = snapshot.data()?['name'];
+    userAddress = snapshot.data()?['address'];
     });
 
     print(userRole);
