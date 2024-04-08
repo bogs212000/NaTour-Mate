@@ -18,7 +18,7 @@ class _LoadingShowPlaceDataState extends State<LoadingShowPlaceData> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            Image.asset('assets/icon/natourbuddy.png', height: 80, width: 80,),
             'Loading...'.text.size(15).make()
           ],
         ),

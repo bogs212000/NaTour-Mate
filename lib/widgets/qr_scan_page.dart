@@ -31,7 +31,10 @@ class _QrscaanState extends State<Qrscaan> {
 
     if (code != null) {
       try {
-        final doc = await FirebaseFirestore.instance.collection('places').doc(code).get();
+        final doc = await FirebaseFirestore.instance
+            .collection('places')
+            .doc(code)
+            .get();
         setState(() {
           name = doc.get('name');
           details = doc.get('details');
@@ -64,11 +67,14 @@ class _QrscaanState extends State<Qrscaan> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.white,),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: const Text('QR Code Scanner'),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -79,113 +85,123 @@ class _QrscaanState extends State<Qrscaan> {
       ),
       body: camState
           ? Center(
-        child: Column(
-          children: [
-            AppBar(
-              title: const Text('QR Code Scanner'),
-            ),
-            const SizedBox(height: 100),
-            const Text(
-              'SCAN QR CODE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w800,
-                fontSize: 50,
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 350,
-              width: 350,
-              child: QRBarScannerCamera(
-                onError: (context, error) => Text(
-                  error.toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.red),
-                ),
-                qrCodeCallback: qrCallback,
-              ),
-            ),
-          ],
-        ),
-      )
-          : Container( height: double.infinity, width: double.infinity,
-            padding: EdgeInsets.only(top: 20),
-            child: Column(
-              children: [
-                image == '' ? Shimmer.fromColors(
-                  baseColor: Colors.grey.shade200,
-                  highlightColor: Colors.white,
-                  child: Container(height: 300, width: double.infinity,)
-                ) :
-                Image.network(image.toString(), height: 300, width: double.infinity,),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              name,
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Column(
-                            children: [
-                              entranceFee != ''
-                                  ? Row(
-                                children: [
-                                  'Entrance fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $entranceFee'.text.make(),
-                                ],
-                              )
-                                  : SizedBox(),
-                              entranceFee != ''
-                                  ? Row(
-                                children: [
-                                  'Cottage fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $entranceFee'.text.make(),
-                                ],
-                              )
-                                  : SizedBox(),
-                              tableFee != ''
-                                  ? Row(
-                                children: [
-                                  'Table fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $tableFee'.text.make(),
-                                ],
-                              )
-                                  : SizedBox(),
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Flexible(child: '$details'.text.overflow(TextOverflow.fade).size(15).make()),
-                          ],
-                        )
-                      ],
+              child: Column(
+                children: [
+                  const SizedBox(height: 100),
+                  const Text(
+                    'SCAN QR CODE',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 50,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 350,
+                    width: 350,
+                    child: QRBarScannerCamera(
+                      onError: (context, error) => Text(
+                        error.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      qrCodeCallback: qrCallback,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  image == ''
+                      ? Shimmer.fromColors(
+                          baseColor: Colors.grey.shade200,
+                          highlightColor: Colors.white,
+                          child: Container(
+                            height: 300,
+                            width: double.infinity,
+                          ))
+                      : Image.network(
+                          image.toString(),
+                          height: 300,
+                          width: double.infinity,
+                        ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Column(
+                              children: [
+                                entranceFee != ''
+                                    ? Row(
+                                        children: [
+                                          'Entrance fee:'.text.make(),
+                                          Spacer(),
+                                          '₱ $entranceFee'.text.make(),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                                entranceFee != ''
+                                    ? Row(
+                                        children: [
+                                          'Cottage fee:'.text.make(),
+                                          Spacer(),
+                                          '₱ $entranceFee'.text.make(),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                                tableFee != ''
+                                    ? Row(
+                                        children: [
+                                          'Table fee:'.text.make(),
+                                          Spacer(),
+                                          '₱ $tableFee'.text.make(),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Flexible(
+                                  child: '$details'
+                                      .text
+                                      .overflow(TextOverflow.fade)
+                                      .size(15)
+                                      .make()),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tourmateadmin/account/loading.dart';
 import 'package:tourmateadmin/account/registrationform.dart';
 import 'package:tourmateadmin/main.dart';
+import 'package:tourmateadmin/pages/splash.screen.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AuthWrapper(),
+                            builder: (context) => SplashScreen(),
                           ),
                         );
                       } catch (e) {

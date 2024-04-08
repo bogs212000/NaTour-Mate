@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourmateadmin/account/loginscreen.dart';
@@ -5,6 +7,7 @@ import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/pages/destination_page.dart';
 import 'package:tourmateadmin/pages/events_page.dart';
 import 'package:tourmateadmin/pages/show.place.data.dart';
+import 'package:tourmateadmin/pages/splash.screen.dart';
 import 'package:tourmateadmin/widgets/drawer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tourmateadmin/widgets/qr_scan_page.dart';
@@ -32,9 +35,10 @@ class _MainAppState extends State<MainApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthWrapper(),
+      home: SplashScreen(),
       routes: {
         '/showplacedata': (context) => ShowPlaceData(),
+        '/auth': (context) => AuthWrapper(),
       },
     );
   }
@@ -69,7 +73,18 @@ class _RootpageState extends State<Rootpage> {
       ),
       appBar: AppBar(
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 0, 173, 14),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.green,
+                Colors.lightGreen,
+              ],
+            ),
+          ),
+        ),
         title: const Row(
           children: [
             Text(

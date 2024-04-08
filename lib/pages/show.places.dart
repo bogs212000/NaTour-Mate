@@ -51,7 +51,20 @@ class _ShowPlacesState extends State<ShowPlaces> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 0, 173, 14),
+        foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.green,
+                Colors.lightGreen,
+              ],
+            ),
+          ),
+        ),
+        // backgroundColor: const Color.fromARGB(255, 0, 173, 14),
         title: const Row(
           children: [
             Text(
@@ -173,7 +186,7 @@ class _ShowPlacesState extends State<ShowPlaces> {
                             height: 100,
                             margin: const EdgeInsets.fromLTRB(3, 8, 2, 5),
                             decoration: BoxDecoration(
-                              border: Border.all(width: 1),
+                              border: Border.all(width: .3),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             width: MediaQuery.of(context).size.width / 1,
@@ -217,8 +230,9 @@ class _ShowPlacesState extends State<ShowPlaces> {
                                         Row(
                                           children: [
                                             Icon(
-                                              Icons.pin_drop,
-                                              size: 20,
+                                              Icons.pin_drop_outlined,
+                                              size: 15,
+                                              color: Colors.red,
                                             ),
                                             Flexible(
                                                 child: "${document['address']}"

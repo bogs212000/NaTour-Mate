@@ -8,7 +8,7 @@ import 'package:tourmateadmin/pages/loading.show.place.data.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ShowPlaceData extends StatefulWidget {
-  const ShowPlaceData({super.key});
+  const ShowPlaceData({Key? key}) : super(key: key);
 
   @override
   State<ShowPlaceData> createState() => _ShowPlaceDataState();
@@ -18,7 +18,7 @@ class _ShowPlaceDataState extends State<ShowPlaceData> {
   GoogleMapController? _mapController;
   bool loading = false;
 
-  void _updateCameraPosition(lat,long) {
+  void _updateCameraPosition() {
     _mapController?.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -29,27 +29,33 @@ class _ShowPlaceDataState extends State<ShowPlaceData> {
     );
   }
 
-
   @override
   void initState() {
     super.initState();
     fetchPlaceData(setState);
-    _updateCameraPosition(lat, long);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (details == '' || details == null) {
-      LoadingShowPlaceData();
+      return LoadingShowPlaceData();
     }
+    _updateCameraPosition();
     return Scaffold(
       appBar: AppBar(
-
+        foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.green,
+                Colors.lightGreen,
+              ],
+            ),
+          ),
+        ),
         title: Text('$name'),
       ),
       body: SingleChildScrollView(
@@ -89,12 +95,15 @@ class _ShowPlaceDataState extends State<ShowPlaceData> {
                   Row(
                     children: [
                       Flexible(
-                          child: '$name'
-                              .text
-                              .size(30)
-                              .bold
-                              .overflow(TextOverflow.fade)
-                              .make())
+                        child: Text(
+                          '$name',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -105,88 +114,75 @@ class _ShowPlaceDataState extends State<ShowPlaceData> {
                         size: 15,
                       ),
                       Flexible(
-                          child: '$address'
-                              .text
-                              .size(12)
-                              .bold
-                              .color(Colors.grey)
-                              .overflow(TextOverflow.fade)
-                              .make())
+                        child: Text(
+                          '$address',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey,
+                          ),
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Column(
+                  SizedBox(height: 10),
+                  if (entrance_fee != '')
+                    Row(
                       children: [
-                        entrance_fee != ''
-                            ? Row(
-                                children: [
-                                  'Entrance fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $entrance_fee'.text.make(),
-                                ],
-                              )
-                            : SizedBox(),
-                        cottage_fee != ''
-                            ? Row(
-                                children: [
-                                  'Cottage fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $cottage_fee'.text.make(),
-                                ],
-                              )
-                            : SizedBox(),
-                        table_fee != ''
-                            ? Row(
-                                children: [
-                                  'Table fee:'.text.make(),
-                                  Spacer(),
-                                  '₱ $table_fee'.text.make(),
-                                ],
-                              )
-                            : SizedBox(),
+                        'Entrance fee:'.text.make(),
+                        Spacer(),
+                        '₱ $entrance_fee'.text.make(),
                       ],
                     ),
-                  ),
+                  if (cottage_fee != '')
+                    Row(
+                      children: [
+                        'Cottage fee:'.text.make(),
+                        Spacer(),
+                        '₱ $cottage_fee'.text.make(),
+                      ],
+                    ),
+                  if (table_fee != '')
+                    Row(
+                      children: [
+                        'Table fee:'.text.make(),
+                        Spacer(),
+                        '₱ $table_fee'.text.make(),
+                      ],
+                    ),
                   Row(
                     children: [
-                      Flexible(
-                          child: 'Details:'
-                              .text
-                              .bold
-                              .size(20)
-                              .overflow(TextOverflow.fade)
-                              .make())
+                      Text(
+                        'Details:',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     children: [
                       Flexible(
-                          child: '$details'
-                              .text
-                              .size(15)
-                              .overflow(TextOverflow.fade)
-                              .make())
+                        child: Text(
+                          '$details',
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10),
                   SizedBox(
                     width: 350,
                     height: 300,
                     child: GoogleMap(
                       onMapCreated: (GoogleMapController controller) {
-                        setState(() {
-                          _mapController = controller; // Set the map controller
-                          _updateCameraPosition(lat, long); // Update the camera position
-                        });
+                        _mapController = controller;
+                        _updateCameraPosition();
                       },
                       initialCameraPosition: CameraPosition(
                         target: LatLng(lat, long),
