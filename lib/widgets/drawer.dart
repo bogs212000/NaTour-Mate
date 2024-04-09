@@ -9,6 +9,7 @@ import 'package:tourmateadmin/account/wrapper.dart';
 import 'package:tourmateadmin/const.dart';
 import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/main.dart';
+import 'package:tourmateadmin/pages/destination.list.all.dart';
 import 'package:tourmateadmin/pages/loading.show.place.data.dart';
 import 'package:tourmateadmin/pages/splash.screen.dart';
 import 'package:tourmateadmin/pages/window.dart';
@@ -216,6 +217,22 @@ class _NavDrawerState extends State<NavDrawer> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MyHomePage(),
+                        ),
+                      ),
+                    },
+                  )
+                else
+                  SizedBox(),
+                if (userRole == "admin")
+                  ListTile(
+                    leading: const Icon(Icons.filter_list),
+                    title: const Text('List'),
+                    onTap: () => {
+                      Navigator.of(context).pop(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListAll(),
                         ),
                       ),
                     },
