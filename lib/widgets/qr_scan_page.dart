@@ -152,49 +152,45 @@ class _QrscaanState extends State<Qrscaan> {
                                 borderRadius: BorderRadius.circular(5)),
                             child: Column(
                               children: [
-                                entranceFee != ''
-                                    ? Row(
-                                        children: [
-                                          'Entrance fee:'.text.make(),
-                                          Spacer(),
-                                          '₱ $entranceFee'.text.make(),
-                                        ],
-                                      )
-                                    : SizedBox(),
-                                entranceFee != ''
-                                    ? Row(
-                                        children: [
-                                          'Cottage fee:'.text.make(),
-                                          Spacer(),
-                                          '₱ $entranceFee'.text.make(),
-                                        ],
-                                      )
-                                    : SizedBox(),
-                                tableFee != ''
-                                    ? Row(
-                                        children: [
-                                          'Table fee:'.text.make(),
-                                          Spacer(),
-                                          '₱ $tableFee'.text.make(),
-                                        ],
-                                      )
-                                    : SizedBox(),
+                                if (entranceFee != '')
+                                  Row(
+                                    children: [
+                                      'Entrance fee:'.text.make(),
+                                      Spacer(),
+                                      '₱ $entranceFee'.text.make(),
+                                    ],
+                                  ),
+                                if (cottageFee != '')
+                                  Row(
+                                    children: [
+                                      'Cottage fee:'.text.make(),
+                                      Spacer(),
+                                      '₱ $cottageFee'.text.make(),
+                                    ],
+                                  ),
+                                if (tableFee != '')
+                                  Row(
+                                    children: [
+                                      'Table fee:'.text.make(),
+                                      Spacer(),
+                                      '₱ $tableFee'.text.make(),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                          SizedBox(height: 10),
                           Row(
                             children: [
                               Flexible(
-                                  child: '$details'
-                                      .text
-                                      .overflow(TextOverflow.fade)
-                                      .size(15)
-                                      .make()),
+                                child: '$details'
+                                    .text
+                                    .overflow(TextOverflow.fade)
+                                    .size(15)
+                                    .make(),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

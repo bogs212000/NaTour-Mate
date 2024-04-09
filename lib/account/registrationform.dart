@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tourmateadmin/account/loginscreen.dart';
+import 'package:velocity_x/velocity_x.dart';
 // import 'model.dart';
 
 class Register extends StatefulWidget {
@@ -39,21 +40,32 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 0, 173, 14),
+        foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Colors.green,
+                Colors.lightGreen,
+              ],
+            ),
+          ),
+        ),
         title: const Row(children: [
           Text(
-            'NaTour BUDDY',
+            'Sign up',
             style: TextStyle(
-                fontSize: 35, fontWeight: FontWeight.bold, color: Colors.white),
+                fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ]),
       ),
-      backgroundColor: Colors.orange[900],
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Container(
-              color: const Color.fromARGB(255, 0, 173, 14),
+              padding: EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: SingleChildScrollView(
@@ -62,31 +74,18 @@ class _RegisterState extends State<Register> {
                   child: Form(
                     key: _formkey,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(
-                          height: 80,
-                        ),
-                        const Text(
-                          "Register Now",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 40,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
+                        Padding(
+                            padding: EdgeInsets.all(10),
+                            child:
+                                'Please complete all the required information. Your data will now be displayed to others.'
+                                    .text
+                                    .make()),
                         TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.green[100],
                             hintText: 'Email',
                             enabled: true,
                             contentPadding: const EdgeInsets.only(
@@ -132,7 +131,7 @@ class _RegisterState extends State<Register> {
                                   });
                                 }),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.green[100],
                             hintText: 'Confirm Password',
                             enabled: true,
                             contentPadding: const EdgeInsets.only(
@@ -174,7 +173,7 @@ class _RegisterState extends State<Register> {
                                   });
                                 }),
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.green[100],
                             hintText: 'Password',
                             enabled: true,
                             contentPadding: const EdgeInsets.only(
@@ -208,7 +207,7 @@ class _RegisterState extends State<Register> {
                           controller: name,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.green[100],
                             hintText: 'Full Name',
                             enabled: true,
                             contentPadding: const EdgeInsets.only(
@@ -242,7 +241,7 @@ class _RegisterState extends State<Register> {
                           controller: address,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white,
+                            fillColor: Colors.green[100],
                             hintText: 'Address',
                             enabled: true,
                             contentPadding: const EdgeInsets.only(
@@ -269,70 +268,57 @@ class _RegisterState extends State<Register> {
                           onChanged: (value) {},
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            MaterialButton(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20.0))),
-                              elevation: 5.0,
-                              height: 40,
-                              onPressed: () {
-                                setState(() {
-                                  showProgress = true;
-                                });
-                                signUp(emailController.text,
-                                    passwordController.text, role);
-                                const CircularProgressIndicator();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginScreen(email: emailController.text),
-                                  ),
-                                );
-                              },
-                              color: Colors.white,
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
+                        SizedBox(height: 20),
+                        MaterialButton(
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          elevation: 5.0,
+                          height: 40,
+                          onPressed: () {
+                            setState(() {
+                              showProgress = true;
+                            });
+                            signUp(emailController.text,
+                                passwordController.text, role);
+                            const CircularProgressIndicator();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(
+                                    email: emailController.text),
                               ),
+                            );
+                          },
+                          color: Colors.white,
+                          child: const Text(
+                            "Register",
+                            style: TextStyle(
+                              fontSize: 20,
                             ),
-                            const SizedBox(
-                              height: 40,
-                            ),
-                            MaterialButton(
-                              elevation: 5.0,
-                              height: 20,
-                              onPressed: () {
-                                const CircularProgressIndicator();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const LoginScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontSize: 15,
-                                ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        MaterialButton(
+                          elevation: 5.0,
+                          height: 20,
+                          onPressed: () {
+                            const CircularProgressIndicator();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
                               ),
+                            );
+                          },
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 15,
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
