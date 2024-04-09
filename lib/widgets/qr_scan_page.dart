@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
+import 'package:tourmateadmin/main.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -35,6 +36,9 @@ class _QrscaanState extends State<Qrscaan> {
             .collection('places')
             .doc(code)
             .get();
+        await FirebaseFirestore.instance.collection('places').doc(code).update({
+          'scanned':  FieldValue.increment(1),
+        });
         setState(() {
           name = doc.get('name');
           details = doc.get('details');
@@ -54,6 +58,30 @@ class _QrscaanState extends State<Qrscaan> {
           cottageFee = '';
           tableFee = '';
         });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Rootpage(),
+          ),
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Notice'),
+              content: Text("Something went wrong, please try again."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Ok'),
+                ),
+
+              ],
+            );
+          },
+        );
       }
     } else {
       setState(() {
@@ -64,6 +92,30 @@ class _QrscaanState extends State<Qrscaan> {
         cottageFee = '';
         tableFee = '';
       });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Rootpage(),
+        ),
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Notice'),
+            content: Text("Something went wrong, please try again."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Ok'),
+              ),
+
+            ],
+          );
+        },
+      );
     }
   }
 
