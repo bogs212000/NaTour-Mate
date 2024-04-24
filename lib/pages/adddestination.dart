@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,9 +43,10 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   bool loading = false;
+
   Future<void> _openImagePicker() async {
     final XFile? pickedImage =
-    await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedImage != null) {
       setState(() {
         _image = File(pickedImage.path);
@@ -55,113 +57,116 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return loading ? LoadingShowPlaceData() : Scaffold(
-      appBar: AppBar(
-        title: Text('Add Destination'),
-      ),
-      body: Container(
-        margin: const EdgeInsets.all(15),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              GestureDetector(
-                child: Container(
-                    alignment: Alignment.center,
-                    child: _image != null
-                        ? Image.file(_image!, fit: BoxFit.cover)
-                        : const Column(
+    return loading
+        ? LoadingShowPlaceData()
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('Add Destination'),
+            ),
+            body: Container(
+              margin: const EdgeInsets.all(15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      child: Container(
+                          alignment: Alignment.center,
+                          child: _image != null
+                              ? Image.file(_image!, fit: BoxFit.cover)
+                              : const Column(
+                                  children: [
+                                    Text('Tap here to take a photo'),
+                                  ],
+                                )),
+                      onTap: () {
+                        _openImagePicker();
+                      },
+                    ),
+                    Row(
                       children: [
-                        Text('Tap here to take a photo'),
+                        DropdownButton<String>(
+                          value: selectedCollection,
+                          items: collections.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedCollection = newValue!;
+                            });
+                          },
+                        ),
                       ],
-                    )),
-                onTap: () {
-                  _openImagePicker();
-                },
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: nameController,
+                      decoration:
+                          InputDecoration(labelText: 'Enter Destination Name'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: addressController,
+                      decoration: InputDecoration(
+                          labelText: 'Enter Destination Address'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: descriptionController,
+                      decoration:
+                          InputDecoration(labelText: 'Enter a Description'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: entranceFee,
+                      decoration:
+                          InputDecoration(labelText: 'Enter Entrance Fee'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: cottageFee,
+                      decoration:
+                          InputDecoration(labelText: 'Enter Cottage Fee'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: tableFee,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'Enter Table Fee',
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: lat,
+                      decoration: InputDecoration(labelText: 'Enter Latitude'),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: long,
+                      decoration: InputDecoration(labelText: 'Enter Longitude'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        setState(() {
+                          loading = true;
+                        });
+                        await createCollectionAndDocument();
+                      },
+                      child: const Text('Create Collection and Document'),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  DropdownButton<String>(
-                    value: selectedCollection,
-                    items: collections.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedCollection = newValue!;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(labelText: 'Enter Destination Name'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: addressController,
-                decoration:
-                    InputDecoration(labelText: 'Enter Destination Address'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                decoration:
-                InputDecoration(labelText: 'Enter a Description'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: entranceFee,
-                decoration:
-                InputDecoration(labelText: 'Enter Entrance Fee'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                keyboardType: TextInputType.number,
-                controller: cottageFee,
-                decoration:
-                InputDecoration(labelText: 'Enter Cottage Fee'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: tableFee,
-                keyboardType: TextInputType.number,
-                decoration:
-                InputDecoration(labelText: 'Enter Table Fee',),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: lat,
-                decoration: InputDecoration(labelText: 'Enter Latitude'),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: long,
-                decoration: InputDecoration(labelText: 'Enter Longitude'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() {
-                    loading = true;
-                  });
-                  await createCollectionAndDocument();
-                },
-                child: const Text('Create Collection and Document'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 
   Future<void> createCollectionAndDocument() async {
@@ -170,77 +175,103 @@ class _MyHomePageState extends State<MyHomePage> {
     double? glat = double.tryParse(lat.text);
     double? glong = double.tryParse(long.text);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    
-    //upload image
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('UsersId/$name');
-    await ref.putFile(File(_image!.path));
-    imageUrl = await ref.getDownloadURL();
-    String DocId = Uuid().v4();
-    await firestore.collection('destinations').doc(selectedCollection.toString()).collection('places').doc(DocId).set({
-      'id': DocId,
-      'status_notice': '',
-      'scanned': 0,
-      'image': imageUrl,
-      'name': nameController.text.toString(),
-      'entrance fee' : entranceFee.text.toString(),
-      'cottage fee' : cottageFee.text.toString(),
-      'table fee' : tableFee.text.toString(),
-      'details' : descriptionController.text.toString(),
-      'address': addressController.text.toString(),
-      'lat': glat,
-      'long': glong,
-      // Add other fields as needed
-    });
-    await firestore.collection('places').doc(DocId).set({
-      'id': DocId,
-      'scanned': 0,
-      'image': imageUrl,
-      'name': nameController.text.toString(),
-      'entrance fee' : entranceFee.text.toString(),
-      'cottage fee' : cottageFee.text.toString(),
-      'table fee' : tableFee.text.toString(),
-      'details' : descriptionController.text.toString(),
-      'address': addressController.text.toString(),
-      'lat': glat,
-      'long': glong,
-    });
-    setState(() {
-      loading = false;
-    });
-    // Display success message
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Success'),
-          content: Text('Collection and Document created successfully.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
+    try {
+      //upload image
+      final ref = FirebaseStorage.instance.ref().child('UsersId/$name');
+      await ref.putFile(File(_image!.path));
+      imageUrl = await ref.getDownloadURL();
+      String DocId = Uuid().v4();
+      await firestore
+          .collection('destinations')
+          .doc(selectedCollection.toString())
+          .collection('places')
+          .doc(DocId)
+          .set({
+        'id': DocId,
+        'status_notice': '',
+        'scanned': 0,
+        'image': imageUrl,
+        'name': nameController.text.toString(),
+        'entrance fee': entranceFee.text.toString(),
+        'cottage fee': cottageFee.text.toString(),
+        'table fee': tableFee.text.toString(),
+        'details': descriptionController.text.toString(),
+        'address': addressController.text.toString(),
+        'lat': glat,
+        'long': glong,
+        // Add other fields as needed
+      });
+      await firestore.collection('places').doc(DocId).set({
+        'id': DocId,
+        'scanned': 0,
+        'image': imageUrl,
+        'name': nameController.text.toString(),
+        'entrance fee': entranceFee.text.toString(),
+        'cottage fee': cottageFee.text.toString(),
+        'table fee': tableFee.text.toString(),
+        'details': descriptionController.text.toString(),
+        'address': addressController.text.toString(),
+        'lat': glat,
+        'long': glong,
+      });
+      setState(() {
+        loading = false;
+      });
+      // Display success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('Collection and Document created successfully.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
 
-    // Wait for 3 seconds
-    await Future.delayed(const Duration(seconds: 3));
+      // Wait for 3 seconds
+      await Future.delayed(const Duration(seconds: 3));
 
-    // Clear text fields
-    _image = null;
-    imageUrl= '';
-    nameController.clear();
-    addressController.clear();
-    descriptionController.clear();
-    entranceFee.clear();
-    cottageFee.clear();
-    tableFee.clear();
-    lat.clear();
-    long.clear();
+      // Clear text fields
+      _image = null;
+      imageUrl = '';
+      nameController.clear();
+      addressController.clear();
+      descriptionController.clear();
+      entranceFee.clear();
+      cottageFee.clear();
+      tableFee.clear();
+      lat.clear();
+      long.clear();
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
+      // Display success message
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Error created a Collection.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
