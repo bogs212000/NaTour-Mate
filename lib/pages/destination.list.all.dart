@@ -95,12 +95,10 @@ class _ListAllState extends State<ListAll> {
                         (DocumentSnapshot document) {
                       return GestureDetector(
                         onTap: () async {
-                          // setState(() {
-                          //   placeDocID = document['id'];
-                          // });
-                          // print(placeDocID);
-                          //
-                          // Navigator.pushNamed(context, '/showplacedata');
+                          setState(() {
+                            des = document['id'].toString();
+                          });
+                          Navigator.pushNamed(context, '/toScanLog');
                         },
                         child: Padding(
                           padding: EdgeInsets.only(left: 5, right: 5),
@@ -143,7 +141,7 @@ class _ListAllState extends State<ListAll> {
                                                 Flexible(
                                                     child: "${document['name']}"
                                                         .text
-                                                        .size(15)
+                                                        .size(14)
                                                         .bold
                                                         .overflow(TextOverflow.fade)
                                                         .make())
@@ -160,7 +158,7 @@ class _ListAllState extends State<ListAll> {
                                                     child: "${document['address']}"
                                                         .text
                                                         .color(Colors.grey)
-                                                        .size(10)
+                                                        .size(9)
                                                         .overflow(
                                                         TextOverflow.ellipsis)
                                                         .make())
