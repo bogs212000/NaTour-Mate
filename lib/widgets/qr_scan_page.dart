@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qr_bar_scanner/qr_bar_scanner_camera.dart';
 import 'package:tourmateadmin/main.dart';
+import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../const.dart';
 
 class Qrscaan extends StatefulWidget {
   const Qrscaan({Key? key}) : super(key: key);
@@ -32,12 +35,22 @@ class _QrscaanState extends State<Qrscaan> {
 
     if (code != null) {
       try {
+        String docId = Uuid().v4();
         final doc = await FirebaseFirestore.instance
             .collection('places')
             .doc(code)
             .get();
         await FirebaseFirestore.instance.collection('places').doc(code).update({
-          'scanned':  FieldValue.increment(1),
+          'scanned': FieldValue.increment(1),
+        });
+        await FirebaseFirestore.instance
+            .collection('places')
+            .doc(code)
+            .collection('log')
+            .doc(docId)
+            .set({
+          'name': userName,
+          'date': DateTime.now(),
         });
         setState(() {
           name = doc.get('name');
@@ -77,7 +90,6 @@ class _QrscaanState extends State<Qrscaan> {
                   },
                   child: Text('Ok'),
                 ),
-
               ],
             );
           },
@@ -111,7 +123,6 @@ class _QrscaanState extends State<Qrscaan> {
                 },
                 child: Text('Ok'),
               ),
-
             ],
           );
         },

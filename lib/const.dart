@@ -22,3 +22,6 @@ String? details;
 String? address;
 double lat = 0.0;
 double long = 0.0;
+
+//pass to log
+String? des;

@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tourmateadmin/const.dart';
-import 'package:tourmateadmin/fetch.data.dart';
-import 'package:tourmateadmin/pages/fees.dart';
-import 'package:tourmateadmin/pages/show.place.data.dart';
-import 'package:tourmateadmin/pages/window.dart';
+import 'package:flutter/widgets.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
+import '../const.dart';
+
 
 class ListAll extends StatefulWidget {
   const ListAll({super.key});
@@ -21,32 +18,7 @@ class ListAll extends StatefulWidget {
 
 class _ListAllState extends State<ListAll> {
   late Future<List<String>> _imageUrls;
-
-  @override
-  void initState() {
-    super.initState();
-    _imageUrls = _getPictures(imageList!);
-  }
-
-  Future<List<String>> _getPictures(String imageList) async {
-    List<String> pictureUrls = [];
-    try {
-      Reference storageReference =
-      FirebaseStorage.instance.ref().child(imageList);
-
-      ListResult result = await storageReference.listAll();
-      for (Reference ref in result.items) {
-        String downloadUrl = await ref.getDownloadURL();
-        pictureUrls.add(downloadUrl);
-      }
-    } catch (e) {
-      print("Error retrieving pictures: $e");
-      // Handle the error as needed
-    }
-    print(pictureUrls);
-    return pictureUrls;
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,17 +179,25 @@ class _ListAllState extends State<ListAll> {
                                               ],
                                             ),
                                             Spacer(),
-                                            Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                              children: [
-                                                "Details"
-                                                    .text
-                                                    .size(11)
-                                                    .color(Colors.grey)
-                                                    .overflow(TextOverflow.fade)
-                                                    .make()
-                                              ],
+                                            GestureDetector(
+                                              onTap: (){
+                                                setState(() {
+                                                  des = document['id'].toString();
+                                                });
+                                                Navigator.pushNamed(context, '/toScanLog');
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                                children: [
+                                                  "Details"
+                                                      .text
+                                                      .size(11)
+                                                      .color(Colors.grey)
+                                                      .overflow(TextOverflow.fade)
+                                                      .make()
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),

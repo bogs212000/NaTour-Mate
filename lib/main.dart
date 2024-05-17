@@ -6,6 +6,7 @@ import 'package:tourmateadmin/account/loginscreen.dart';
 import 'package:tourmateadmin/fetch.data.dart';
 import 'package:tourmateadmin/pages/destination_page.dart';
 import 'package:tourmateadmin/pages/events_page.dart';
+import 'package:tourmateadmin/pages/scan.log.dart';
 import 'package:tourmateadmin/pages/show.place.data.dart';
 import 'package:tourmateadmin/pages/splash.screen.dart';
 import 'package:tourmateadmin/widgets/drawer.dart';
@@ -39,6 +40,7 @@ class _MainAppState extends State<MainApp> {
       routes: {
         '/showplacedata': (context) => ShowPlaceData(),
         '/auth': (context) => AuthWrapper(),
+        '/toScanLog': (context) => ScanLog(),
       },
     );
   }
